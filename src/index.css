@@ -1,13 +1,96 @@
-body {
+/* =============================
+   Global Reset & Box Sizing
+============================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
+/* =============================
+   Root Variables (Bitly Theme)
+============================= */
+:root {
+  --color-primary: #EE6123;
+  /* orange */
+  --color-primary-hover: #d9541f;
+  --color-secondary: #1A73E8;
+  /* blue */
+  --color-background: #f9f9f9;
+  --color-white: #ffffff;
+  --color-text-primary: #222;
+  --color-text-secondary: #555;
+  --color-border: #E5E5E5;
+  --color-error: #d32f2f;
+}
+
+/* =============================
+   Base Styles
+============================= */
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', 'Segoe UI', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+}
+
+/* =============================
+   Code Block Font
+============================= */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* =============================
+   Headings & Text
+============================= */
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+p {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+small {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* =============================
+   Links
+============================= */
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =============================
+   Buttons (Native Reset)
+============================= */
+button {
+  font-family: inherit;
+  cursor: pointer;
 }
