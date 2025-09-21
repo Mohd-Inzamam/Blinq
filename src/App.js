@@ -10,6 +10,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import PrivateRoute from "./components/layout/PrivateRoute";
 import { useAuth } from "./hooks/useAuth";
 import theme from "./theme";
+import ShortenURLForm from "./pages/dashboard/ShortenURLForm";
+// import Home from "./components/common/Home";
 
 function App() {
   const { user } = useAuth();
@@ -20,7 +22,6 @@ function App() {
 
       {/* Navbar always visible */}
       <Navbar />
-
       <Routes>
         {/* Public routes */}
         <Route
@@ -42,10 +43,14 @@ function App() {
           }
         />
 
+        {/* Nested routes */}
+        <Route path="shorten" element={<ShortenURLForm />} />
+
+
         {/* Default route */}
         <Route path="/" element={<Navigate to="/dashboard" />} />
       </Routes>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
 

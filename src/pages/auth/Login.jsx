@@ -53,12 +53,12 @@ const Login = () => {
           body: JSON.stringify({ email, password }),
         }
       );
-
+      console.log(response);
       if (!response.ok) {
         const errData = await response.json();
         throw new Error(errData.message || "Login failed");
       }
-
+      console.log(response);
       const data = await response.json();
       const token = data.token;
 
@@ -70,7 +70,7 @@ const Login = () => {
       }
 
       // Call AuthContext login to update state
-      await login(token);
+      await login({ token });
 
       navigate("/dashboard");
     } catch (err) {

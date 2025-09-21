@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, CircularProgress } from "@mui/material";
 import styles from "./SignUp.module.css";
-import { useAuth } from "../../hooks/useAuth";
+// import { useAuth } from "../../hooks/useAuth";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
 
-  const { login } = useAuth();
+  // const { login } = useAuth();
   const navigate = useNavigate();
 
   const validate = () => {
@@ -52,6 +52,46 @@ export default function SignUp() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setServerError("");
+  //   if (!validate()) return;
+
+  //   setLoading(true);
+  //   try {
+  //     const res = await fetch(
+  //       "https://blinq-url-shortener.onrender.com/auth/register",
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           name: formData.fullName,
+  //           email: formData.email,
+  //           password: formData.password,
+  //         }),
+  //       }
+  //     );
+
+  //     const data = await res.json();
+
+  //     if (!res.ok) {
+  //       throw new Error(data.message || "Registration failed");
+  //     }
+
+  //     // Save token in auth context
+  //     if (data.token) {
+  //       login(data.token);
+  //       navigate("/dashboard");
+  //     } else {
+  //       throw new Error("No token received from server");
+  //     }
+  //   } catch (err) {
+  //     setServerError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError("");
@@ -78,13 +118,10 @@ export default function SignUp() {
         throw new Error(data.message || "Registration failed");
       }
 
-      // Save token in auth context
-      if (data.token) {
-        login(data.token);
-        navigate("/dashboard");
-      } else {
-        throw new Error("No token received from server");
-      }
+      // ✅ Registration succeeded → redirect to login
+      navigate("/login", {
+        state: { successMsg: "Registration successful. Please log in." },
+      });
     } catch (err) {
       setServerError(err.message);
     } finally {
@@ -178,3 +215,8 @@ export default function SignUp() {
     </div>
   );
 }
+
+// if (data.token) {
+//       //   login({ token: data.token, user: data.user });
+//       //   navigate("/dashboard");
+//       // }
