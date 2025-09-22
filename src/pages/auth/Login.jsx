@@ -1,5 +1,5 @@
 // src/pages/auth/Login.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Login.module.css";
 import {
   TextField,
@@ -8,13 +8,15 @@ import {
   CircularProgress,
   Checkbox,
   FormControlLabel,
+  Alert,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth(); // comes from AuthContext
 
   const [email, setEmail] = useState("");
@@ -23,6 +25,21 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Show success message from signup redirect
+  useEffect(() => {
+    if (location.state?.successMsg) {
+      setSuccessMessage(location.state.successMsg);
+
+      // Remove message after 1.5s
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 1500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location.state]);
 
   const validate = () => {
     const tempErrors = {};
@@ -47,29 +64,23 @@ const Login = () => {
         "https://blinq-url-shortener.onrender.com/auth/login",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         }
       );
-      console.log(response);
+
       if (!response.ok) {
         const errData = await response.json();
         throw new Error(errData.message || "Login failed");
       }
-      console.log(response);
+
       const data = await response.json();
       const token = data.token;
 
       // Save token in storage (localStorage or sessionStorage)
-      if (rememberMe) {
-        localStorage.setItem("blinq_token", token);
-      } else {
-        sessionStorage.setItem("blinq_token", token);
-      }
+      if (rememberMe) localStorage.setItem("blinq_token", token);
+      else sessionStorage.setItem("blinq_token", token);
 
-      // Call AuthContext login to update state
       await login({ token });
 
       navigate("/dashboard");
@@ -86,6 +97,11 @@ const Login = () => {
     <div className={styles.container}>
       <div className={styles.card}>
         <h2 className={styles.title}>Log In</h2>
+
+        {/* Success message */}
+        {successMessage && (
+          <div className={styles.successMessage}>{successMessage}</div>
+        )}
 
         {errors.form && <div className={styles.formError}>{errors.form}</div>}
 

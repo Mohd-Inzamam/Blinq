@@ -15,6 +15,16 @@ root.render(
       <CssBaseline />
       <BrowserRouter>
         <AuthProvider>
+          <div className="star-layer" aria-hidden="true">
+            <div className="star s1" />
+            <div className="star s2" />
+            <div className="star s3" />
+            <div className="star s4" />
+            <div className="star s5" />
+            <div className="star s6" />
+            <div className="star s7" />
+            <div className="star s8" />
+          </div>
           <App />
         </AuthProvider>
       </BrowserRouter>

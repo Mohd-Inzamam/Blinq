@@ -1,9 +1,15 @@
-// src/pages/dashboard/ShortenURLForm.jsx
 import React, { useState } from "react";
-import { TextField, Button, CircularProgress, IconButton } from "@mui/material";
+import {
+  TextField,
+  Button,
+  CircularProgress,
+  IconButton,
+  Skeleton,
+} from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { BASEURL } from "../../context/AuthContext";
 import { useAuth } from "../../hooks/useAuth";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ShortenURLForm = () => {
   const [originalURL, setOriginalURL] = useState("");
@@ -11,27 +17,23 @@ const ShortenURLForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
   const [shortURL, setShortURL] = useState("");
+  const [toastOpen, setToastOpen] = useState(false);
   const { token } = useAuth();
 
-  // Validation function
   const validate = () => {
     const errors = {};
-    if (!originalURL.trim()) {
-      errors.originalURL = "URL is required";
-    } else if (!/^https?:\/\/.+/i.test(originalURL.trim())) {
+    if (!originalURL.trim()) errors.originalURL = "URL is required";
+    else if (!/^https?:\/\/.+/i.test(originalURL.trim()))
       errors.originalURL = "URL must start with http:// or https://";
-    }
 
-    if (customAlias && !/^[a-zA-Z0-9_-]{1,30}$/.test(customAlias)) {
+    if (customAlias && !/^[a-zA-Z0-9_-]{1,30}$/.test(customAlias))
       errors.customAlias =
         "Alias can only contain letters, numbers, underscores, dashes (max 30 chars)";
-    }
 
     setError(errors);
     return Object.keys(errors).length === 0;
   };
 
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -63,12 +65,9 @@ const ShortenURLForm = () => {
         throw new Error("Server returned invalid response");
       }
 
-      if (!response.ok) {
+      if (!response.ok)
         setError({ api: data.message || "Something went wrong." });
-      } else {
-        // Append shortcode to frontend base URL
-        setShortURL(`${BASEURL}/${data.shortCode}`);
-      }
+      else setShortURL(`${BASEURL}/${data.shortCode}`);
     } catch (err) {
       setError({ api: err.message || "Network error. Please try again." });
     } finally {
@@ -76,13 +75,17 @@ const ShortenURLForm = () => {
     }
   };
 
-  // Copy to clipboard
   const handleCopy = () => {
     navigator.clipboard.writeText(shortURL);
+    setToastOpen(true);
+    setTimeout(() => setToastOpen(false), 1500);
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
       style={{
         maxWidth: "600px",
         margin: "40px auto",
@@ -92,46 +95,86 @@ const ShortenURLForm = () => {
         boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
       }}>
       <form onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="Original URL"
-          value={originalURL}
-          onChange={(e) => setOriginalURL(e.target.value)}
-          error={!!error.originalURL}
-          helperText={error.originalURL}
-          margin="normal"
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}>
+          <TextField
+            fullWidth
+            label="Original URL"
+            value={originalURL}
+            onChange={(e) => setOriginalURL(e.target.value)}
+            error={!!error.originalURL}
+            helperText={error.originalURL}
+            margin="normal"
+          />
+        </motion.div>
 
-        <TextField
-          fullWidth
-          label="Custom Alias (optional)"
-          value={customAlias}
-          onChange={(e) => setCustomAlias(e.target.value)}
-          error={!!error.customAlias}
-          helperText={error.customAlias}
-          margin="normal"
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}>
+          <TextField
+            fullWidth
+            label="Custom Alias (optional)"
+            value={customAlias}
+            onChange={(e) => setCustomAlias(e.target.value)}
+            error={!!error.customAlias}
+            helperText={error.customAlias}
+            margin="normal"
+          />
+        </motion.div>
 
         {error.api && (
-          <p style={{ color: "red", marginTop: 10 }}>{error.api}</p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.3 }}
+            style={{ color: "red", marginTop: 10 }}>
+            {error.api}
+          </motion.p>
         )}
 
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            mt: 2,
-            backgroundColor: "#EE6123",
-            "&:hover": { backgroundColor: "#cc4f1a" },
-          }}
-          fullWidth
-          disabled={loading}>
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Shorten"}
-        </Button>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.4 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              mt: 2,
+              backgroundColor: "#EE6123",
+              "&:hover": {
+                backgroundColor: "#cc4f1a",
+                transform: "scale(1.05)",
+              },
+              transition: "all 0.3s ease",
+            }}
+            fullWidth
+            disabled={loading}>
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Shorten"
+            )}
+          </Button>
+        </motion.div>
       </form>
 
+      {loading && (
+        <Skeleton
+          variant="rectangular"
+          height={50}
+          sx={{ borderRadius: 2, mt: 2 }}
+        />
+      )}
+
       {shortURL && (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
           style={{
             marginTop: 20,
             display: "flex",
@@ -145,9 +188,34 @@ const ShortenURLForm = () => {
           <IconButton onClick={handleCopy}>
             <ContentCopyIcon />
           </IconButton>
-        </div>
+        </motion.div>
       )}
-    </div>
+
+      {/* Animated toast */}
+      <AnimatePresence>
+        {toastOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.4 }}
+            style={{
+              position: "fixed",
+              top: 20,
+              left: "50%",
+              transform: "translateX(-50%)",
+              background: "#4caf50",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              zIndex: 9999,
+            }}>
+            Copied to clipboard!
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

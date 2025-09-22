@@ -24,6 +24,16 @@
   --color-text-secondary: #555;
   --color-border: #E5E5E5;
   --color-error: #d32f2f;
+
+  /* Extra variables for dark sky */
+  --bg-color: #06070a;
+  --nebula-1: rgba(28, 30, 45, 0.85);
+  --nebula-2: rgba(12, 14, 22, 0.7);
+  --star-color: #ffffff;
+  --star-dim: rgba(255, 255, 255, 0.6);
+  --star-twinkle-duration: 6s;
+  --star-drift-duration: 60s;
+  --secondary-drift-duration: 120s;
 }
 
 /* =============================
@@ -38,6 +48,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text-primary);
   background-color: var(--color-background);
+
+  /* Needed for background layers */
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* =============================
@@ -93,4 +108,22 @@ a:hover {
 button {
   font-family: inherit;
   cursor: pointer;
+}
+
+/* =========================================================
+   DARK NIGHT SKY BACKGROUND WITH MOVING STARS
+========================================================= */
+
+Nebula gradient layer
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 40% at 10% 30%, rgba(20, 24, 40, 0.55), transparent 20%),
+    radial-gradient(50% 30% at 85% 70%, rgba(40, 18, 40, 0.4), transparent 20%),
+    linear-gradient(180deg, var(--nebula-1), var(--nebula-2));
+  filter: blur(18px) saturate(105%);
 }
