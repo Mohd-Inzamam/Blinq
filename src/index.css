@@ -114,16 +114,31 @@ button {
    DARK NIGHT SKY BACKGROUND WITH MOVING STARS
 ========================================================= */
 
-Nebula gradient layer
+/* Nebula gradient layer */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(60% 40% at 10% 30%, rgba(20, 24, 40, 0.55), transparent 20%),
-    radial-gradient(50% 30% at 85% 70%, rgba(40, 18, 40, 0.4), transparent 20%),
-    linear-gradient(180deg, var(--nebula-1), var(--nebula-2));
+  /* background-color: #1e293b; */
   filter: blur(18px) saturate(105%);
+}
+
+.pricing-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+}
+
+.pricing-card-highlight {
+  border-color: var(--primary-color);
+}
+
+.pricing-feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
 }

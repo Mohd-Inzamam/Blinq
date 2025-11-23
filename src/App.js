@@ -11,6 +11,9 @@ import PrivateRoute from "./components/layout/PrivateRoute";
 import { useAuth } from "./hooks/useAuth";
 import theme from "./theme";
 import ShortenURLForm from "./pages/dashboard/ShortenURLForm";
+import PricingPage from "./pages/landing/pricing/PricingPage";
+import FeaturesPage from "./pages/landing/features/FeaturesPage";
+import ResourcesPage from "./pages/landing/resources/ResourcesPage";
 // import Home from "./components/common/Home";
 
 function App() {
@@ -31,6 +34,21 @@ function App() {
         <Route
           path="/login"
           element={user ? <Navigate to="/dashboard" /> : <Login />}
+        />
+
+        <Route
+          path="/features"
+          element={user ? <Navigate to="/features" /> : <FeaturesPage />}
+        />
+
+        <Route
+          path="/pricing"
+          element={user ? <Navigate to="/pricing" /> : <PricingPage />}
+        />
+
+        <Route
+          path="/resources"
+          element={user ? <Navigate to="/resources" /> : <ResourcesPage />}
         />
 
         {/* Protected route */}
