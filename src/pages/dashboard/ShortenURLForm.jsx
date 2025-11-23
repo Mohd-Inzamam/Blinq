@@ -10,6 +10,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { BASEURL } from "../../context/AuthContext";
 import { useAuth } from "../../hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
+import QRCodeGenerator from "./QRCodeGenerator";
 
 const ShortenURLForm = () => {
   const [originalURL, setOriginalURL] = useState("");
@@ -190,6 +191,8 @@ const ShortenURLForm = () => {
           </IconButton>
         </motion.div>
       )}
+
+      {shortURL && <QRCodeGenerator shortCode={shortURL.split("/").pop()} />}
 
       {/* Animated toast */}
       <AnimatePresence>
